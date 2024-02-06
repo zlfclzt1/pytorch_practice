@@ -104,7 +104,7 @@ class MunichDataset(Dataset):
 
 if __name__ == "__main__":
     dataset = MunichDataset('../data')
-    dataloader = DataLoader(dataset, batch_size=2, num_workers=8,
+    dataloader = DataLoader(dataset, batch_size=1, num_workers=8,
                             collate_fn=dataset.collate_fn)
 
     for i, batch in enumerate(dataloader):

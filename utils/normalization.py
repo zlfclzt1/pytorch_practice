@@ -37,8 +37,29 @@ class BatchNorm2D(nn.Module):
                 self.running_var =  (1-self.momentum) * self.running_var + self.momentum * var
         return out
 
+class LayerNorm(nn.Module):
+    def __init__(self, normalized_shape):
+        super(LayerNorm, self).__init__()
+        if isinstance(normalized_shape, int):
+            normalized_shape = [normalized_shape]
+        self.normalized_shape = normalized_shape
+        self.gamma = nn.Parameter(torch.randn(normalized_shape))
+        self.beta = nn.Parameter(torch.randn(normalized_shape))
+
+    def forward(self, input):
+        n = len(self.normalized_shape)
+        process_dim = torch.arange(-n, 0).tolist()
+
+        mean = torch.mean(input, dim=process_dim, keepdim=True)
+        var = torch.var(input, dim=process_dim, unbiased=False, keepdim=True)
+        x = (input - mean) / torch.sqrt(var + 1e-6)
 
 if __name__ == "__main__":
     bn = BatchNorm2D(8)
     input = torch.randn((4, 8, 16, 16), dtype=torch.float32)
     out = bn(input)
+
+    input1 = torch.randn((2, 8, 16))
+    ln = LayerNorm(normalized_shape=[8, 16])
+
+    result = ln(input1)
