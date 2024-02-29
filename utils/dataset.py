@@ -44,7 +44,6 @@ class MunichDataset(Dataset):
         width = image.shape[1]
         height = image.shape[0]
 
-
         box_info = json.load(open(anno_path))
         box_info = box_info["boxes"]
         boxes = []
